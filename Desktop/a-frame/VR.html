@@ -28,20 +28,23 @@
   width="1" height="1" depth="1"
   material="src: poko-front.jpg"
   shadow="cast: true"
-  animation="property: rotation; by: 0 360 0; dur: 3000; loop: true; enabled: false">
+  rotation-spin>
 </a-box>
 
 <script>
-  AFRAME.registerComponent('click-to-spin', {
+  AFRAME.registerComponent('rotation-spin', {
+    schema: { active: { default: false } },
     init: function () {
       this.el.addEventListener('click', () => {
-        this.el.setAttribute('animation', 'enabled', true);
+        this.data.active = !this.data.active; // 回転スタート
       });
+    },
+    tick: function (time, timeDelta) {
+      if (!this.data.active) return;
+      const rotation = this.el.getAttribute('rotation');
+      rotation.y += (timeDelta / 500) * 1080; // 1秒で120度回転
+      this.el.setAttribute('rotation', rotation);
     }
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#myBox').setAttribute('click-to-spin', '');
   });
 </script>
 
